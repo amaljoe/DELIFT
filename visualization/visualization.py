@@ -373,9 +373,13 @@ def main():
         graph_visualizer, results_visualizer = st.tabs(["Graph Visualization", "Results"])
 
         # set some constants
-        uc_labels = ["Initial", "LESS", "Model Dependent + CG FL", "SelectIT", "Model Independent + CG FL", "Random", "Full Dataset"]
-        ucl_shorthand = ["initial", "less", "mod_dep_fl", "select_it", "mod_ind_fl", "random", "full_data"]
+        # uc_labels = ["Initial", "LESS", "Model Dependent + CG FL", "SelectIT", "Model Independent + CG FL", "Random", "Full Dataset"]
+        # ucl_shorthand = ["initial", "less", "mod_dep_fl", "select_it", "mod_ind_fl", "random", "full_data"]
         sl_labels = ["ICL", "PEFT"]
+
+        uc_labels = ["Initial", "Model Independent + CG FL"]
+        ucl_shorthand = ["initial", "mod_ind_fl"]
+        sl_labels = ["PEFT"]
 
         # visualize one experiment
         with graph_visualizer:

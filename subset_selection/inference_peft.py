@@ -153,6 +153,7 @@ class InferencePEFT:
         ##########################
         # Train model
         ##########################
+        print(f'Training model {model_dir}...')
         trainer.train()
 
         ##########################

@@ -116,14 +116,14 @@ class InferencePEFT:
                 "append_concat_token": False,  # No need to add additional separator token
             },
             output_dir=model_dir,
-            num_train_epochs=24,
-            per_device_train_batch_size=24,
+            num_train_epochs=24, #1
+            per_device_train_batch_size=24, #1
             per_device_eval_batch_size=8,
             gradient_accumulation_steps=1,
             eval_accumulation_steps=1,
-            evaluation_strategy="steps",
-            eval_steps=500,
-            save_strategy="steps",
+            evaluation_strategy="steps", #no
+            eval_steps=500, #10
+            save_strategy="steps", #no
             save_steps=500,
             learning_rate=2.5e-5,
             bf16=True,
@@ -135,7 +135,7 @@ class InferencePEFT:
             gradient_checkpointing=True,
             gradient_checkpointing_kwargs={'use_reentrant':True},
         )
-
+        print('initialising SFTTrainer...')
 
         trainer = SFTTrainer(
             model=model,
@@ -147,48 +147,6 @@ class InferencePEFT:
             args=sft_config,
         )
 
-        training_arguments = TrainingArguments(
-            output_dir=model_dir,
-            num_train_epochs=20,
-            per_device_train_batch_size=1,
-            per_device_eval_batch_size=1,
-            gradient_accumulation_steps=1,
-            eval_accumulation_steps=1,
-            eval_strategy="no",
-            eval_steps=10,
-            save_strategy="no",
-            save_steps=500,
-            learning_rate=2.5e-5,
-            bf16=True,
-            logging_steps=10,
-            optim="paged_adamw_8bit",
-            lr_scheduler_type="constant",
-            weight_decay=0.01,
-            report_to="tensorboard",
-            gradient_checkpointing=True,
-            gradient_checkpointing_kwargs={'use_reentrant':True} 
-        )
-
-        print('initialising SFTTrainer...')
-
-        trainer = SFTTrainer(
-            model=model,
-            train_dataset=train_dataset,
-            eval_dataset=valid_dataset,
-            peft_config=peft_config,
-            max_seq_length=max_seq_length,
-            processing_class=tokenizer,
-            compute_metrics=compute_metrics,
-            args=training_arguments,
-            packing=True,
-            eval_packing=False,
-            dataset_text_field="text",
-            dataset_kwargs={
-            "add_special_tokens": False,  # We template with special tokens
-            "append_concat_token": False,  # No need to add additional separator token
-        },
-        )
-        
         # if trainer.accelerator.is_main_process:
         #     trainer.model.print_trainable_parameters()
 

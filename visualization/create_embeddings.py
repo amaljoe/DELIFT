@@ -347,7 +347,7 @@ def parse_alpaca_dataset():
 
     import json
 
-    with open("/home/ishikaa2/delift/visualization/chatalpaca-20k.json", 'r') as f:
+    with open("/root/workspace/DELIFT/visualization/chatalpaca-20k.json", 'r') as f:
         data = f.readlines()
 
     chatalpaca = []

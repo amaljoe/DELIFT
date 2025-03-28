@@ -3,7 +3,7 @@ from tqdm import tqdm
 import numpy as np
 import torch
 import sys
-sys.path.append('/home/ishikaa2/delift/visualization/')
+sys.path.append('/root/workspace/DELIFT/visualization/')
 from folder_names import FolderNames
 from models import Models
 from data_object import DataObject, DataObjectConstants
@@ -255,8 +255,8 @@ if __name__ == "__main__":
     dataset_config_code = fn.dataset_config_file_code(existing_data_name, new_data_name)
     data.set_dataset_config_code(dataset_config_code)
 
-    queue_file = f'/shared/storage-01/users/ishikaa2/delift_crc/icl_utility_kernel_queue_{args.is_data}_{dataset_config_code}.pkl'
-    utility_file = f'/shared/storage-01/users/ishikaa2/delift_crc/icl_utility_kernel_{args.is_data}_{dataset_config_code}.pkl'
+    queue_file = f'/root/workspace/DELIFT/cache/icl_utility_kernel_queue_{args.is_data}_{dataset_config_code}.pkl'
+    utility_file = f'/root/workspace/DELIFT/cache/icl_utility_kernel_{args.is_data}_{dataset_config_code}.pkl'
     if args.is_data:
         train_prompts=data.train_new_prompts
         train_responses=data.train_new_references

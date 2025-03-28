@@ -19,10 +19,13 @@ def main(model_names, existing_data_name, new_data_name, threshold, subset_perce
     # )
 
     # all experimental configurations
-    uc_labels = ["Initial", "DEFT UCS", "LESS", "Model Dependent + CG FL", "Model Dependent + FL Only", "SelectIT", "Model Independent + CG FL", "Random", "Full Dataset"]
-    ucl_shorthand = ["initial", "deft_ucs", "less", "mod_dep_fl", "mod_dep_flonly", "select_it", "mod_ind_fl", "random", "full_data"]
-    # sl_labels = ["PEFT"]
-    sl_labels = ["ICL", "PEFT"]
+    # uc_labels = ["Initial", "DEFT UCS", "LESS", "Model Dependent + CG FL", "Model Dependent + FL Only", "SelectIT", "Model Independent + CG FL", "Random", "Full Dataset"]
+    # ucl_shorthand = ["initial", "deft_ucs", "less", "mod_dep_fl", "mod_dep_flonly", "select_it", "mod_ind_fl", "random", "full_data"]
+    # sl_labels = ["ICL", "PEFT"]
+    uc_labels = ["Initial", "Model Dependent + CG FL"]
+    ucl_shorthand = ["initial", "mod_dep_fl"]
+    sl_labels = ["PEFT"]
+
 
     if "125m" in model_names[0]:
         sl_labels.append('FFT')
@@ -108,7 +111,7 @@ if __name__ == "__main__":
     parser.add_argument("--subset_percentage", type=float, default=0.3)
     parser.add_argument("--existing_data_name", type=str, default="mix-instruct")
     parser.add_argument("--new_data_name", type=str, default="mix-instruct")
-    parser.add_argument("--model_name", type=str, default="facebook/opt-125m") #mistralai/Mistral-7B-v0.1") #meta-llama/Llama-3.2-3B")
+    parser.add_argument("--model_name", type=str, default='meta-llama/Llama-3.2-3B') #mistralai/Mistral-7B-v0.1") #meta-llama/Llama-3.2-3B")
     args = parser.parse_args()
 
     main([args.model_name], args.existing_data_name, args.new_data_name, args.threshold, args.subset_percentage)

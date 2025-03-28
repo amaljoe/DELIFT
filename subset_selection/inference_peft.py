@@ -2,7 +2,7 @@ from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 from bert_score import score as bert_score
 from datasets import Dataset
 from peft import LoraConfig
-from trl import SFTTrainer
+from trl import SFTTrainer, SFTConfig
 import numpy as np
 import evaluate
 import torch
@@ -105,8 +105,48 @@ class InferencePEFT:
             lora_dropout=0.1,
             task_type="CAUSAL_LM",
         )
-
         max_seq_length = 1024
+        sft_config = SFTConfig(
+            max_seq_length=max_seq_length,
+            packing=True,
+            eval_packing=False,
+            dataset_text_field="text",
+            dataset_kwargs={
+                "add_special_tokens": False,  # We template with special tokens
+                "append_concat_token": False,  # No need to add additional separator token
+            },
+            output_dir=model_dir,
+            num_train_epochs=24,
+            per_device_train_batch_size=24,
+            per_device_eval_batch_size=8,
+            gradient_accumulation_steps=1,
+            eval_accumulation_steps=1,
+            evaluation_strategy="steps",
+            eval_steps=500,
+            save_strategy="steps",
+            save_steps=500,
+            learning_rate=2.5e-5,
+            bf16=True,
+            logging_steps=10,
+            optim="paged_adamw_8bit",
+            lr_scheduler_type="constant",
+            weight_decay=0.01,
+            report_to="tensorboard",
+            gradient_checkpointing=True,
+            gradient_checkpointing_kwargs={'use_reentrant':True},
+        )
+
+
+        trainer = SFTTrainer(
+            model=model,
+            train_dataset=train_dataset,
+            eval_dataset=valid_dataset,
+            peft_config=peft_config,
+            tokenizer=tokenizer,
+            compute_metrics=compute_metrics,
+            args=sft_config,
+        )
+
         training_arguments = TrainingArguments(
             output_dir=model_dir,
             num_train_epochs=20,
@@ -129,6 +169,8 @@ class InferencePEFT:
             gradient_checkpointing_kwargs={'use_reentrant':True} 
         )
 
+        print('initialising SFTTrainer...')
+
         trainer = SFTTrainer(
             model=model,
             train_dataset=train_dataset,
@@ -147,8 +189,8 @@ class InferencePEFT:
         },
         )
         
-        if trainer.accelerator.is_main_process:
-            trainer.model.print_trainable_parameters()
+        # if trainer.accelerator.is_main_process:
+        #     trainer.model.print_trainable_parameters()
 
         ##########################
         # Train model

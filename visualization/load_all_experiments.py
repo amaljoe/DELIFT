@@ -22,8 +22,8 @@ def main(model_names, existing_data_name, new_data_name, threshold, subset_perce
     # uc_labels = ["Initial", "DEFT UCS", "LESS", "Model Dependent + CG FL", "Model Dependent + FL Only", "SelectIT", "Model Independent + CG FL", "Random", "Full Dataset"]
     # ucl_shorthand = ["initial", "deft_ucs", "less", "mod_dep_fl", "mod_dep_flonly", "select_it", "mod_ind_fl", "random", "full_data"]
     # sl_labels = ["ICL", "PEFT"]
-    uc_labels = ["Initial", "Model Dependent + CG FL"]
-    ucl_shorthand = ["initial", "mod_dep_fl"]
+    uc_labels = ["Initial"]
+    ucl_shorthand = ["initial"]
     sl_labels = ["PEFT"]
 
 

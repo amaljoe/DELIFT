@@ -45,12 +45,14 @@ def main(model_names, existing_data_name, new_data_name, threshold, subset_perce
 
         models = Models(language_model_name=model_name)
 
+        print("Loading data...")
         with open(fn.visualization_cache_file, 'rb') as f:
             vis_dims, all_data = pickle.load(f)
         
         existing_data_ind = labels.index(existing_data_name)
         new_data_ind = labels.index(new_data_name)
 
+        print("Creating data objects(1/2)...")
         # set up training and validation sets for the DataObject instance
         num_exist_train, num_new_train = len(all_data[existing_data_ind][0]), len(all_data[new_data_ind][0])
         num_exist_valid, num_new_valid = len(all_data[existing_data_ind][1]), len(all_data[new_data_ind][1])
@@ -60,7 +62,7 @@ def main(model_names, existing_data_name, new_data_name, threshold, subset_perce
         new_point_labels = [np.array([f"{new_data_ind}-{i}" for i in range(len(all_data[new_data_ind][0]))]), 
                             np.array([f"{new_data_ind}-{num_new_train+i}" for i in range(len(all_data[new_data_ind][1]))]),
                             np.array([f"{new_data_ind}-{num_new_train+num_new_valid+i}" for i in range(len(all_data[new_data_ind][2]))])]
-    
+        print("Creating data objects(2/2)...")
         # create a DataObject instance
         if existing_data_name == new_data_name:
             data = DataObject([existing_data_name], [existing_data_ind], [new_data_name], [new_data_ind], [all_data[existing_data_ind][0]], [vis_dims[existing_data_ind][0]], [exist_point_labels[0]],
@@ -91,6 +93,7 @@ def main(model_names, existing_data_name, new_data_name, threshold, subset_perce
                     exp_config = ucl_shorthand[uc_labels.index(utility_criteria)] + "-" + subset_learning + "-" + str(subset_percentage)
 
                 try:
+                    print(f"Running {exp_config}")
                     # if not os.path.exists(fn.exp_knowledge_file(dataset_config_code, exp_config)):
                     #     continue
                     load_subset_experiment(existing_data_name, existing_data_ind, new_data_name, new_data_ind, exp_config, utility_criteria, subset_learning, 
@@ -100,7 +103,7 @@ def main(model_names, existing_data_name, new_data_name, threshold, subset_perce
                     bge_val, _ = calculate_test_performance(all_data[new_data_ind][1], data, exp_config, models, fn, score="bge")
                     llmaj_val, _ = calculate_test_performance(all_data[new_data_ind][2], data, exp_config, models, fn, score="prometheus")
                 except:
-                    hi = 9
+                    raise
                 # my_table = wandb.Table(columns=['ROUGE', 'BGE', 'LLM-A-J'])
                 # my_table.add_data(rouge_val[0], bge_val, llmaj_val)
                 # run.log({f"{data.use_case} - {model_name}, {exp_config}": my_table})

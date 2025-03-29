@@ -16,7 +16,7 @@ def batch_inference(model, tokenizer, input):
     input_ids = encoded_input['input_ids']
     attention_mask = encoded_input['attention_mask']
             
-    bs = 16
+    bs = 128
     output = []
     for i in range(0, len(encoded_input['input_ids']), bs):
         output.extend(model(input_ids=input_ids[i:i+bs], attention_mask=attention_mask[i:i+bs]).pooler_output.detach())

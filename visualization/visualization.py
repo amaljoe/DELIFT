@@ -286,20 +286,22 @@ def load_subset_experiment(existing_data_name, exist_ind, new_data_name, new_ind
     # BEFORE: what does the LM "know"?
     # icl/peft sets contain the existing training data
     # evaluate on the new validation data
-    data.set_icl_peft_sets(data.train_existing_data, data.train_existing_prompts, data.train_existing_references, data.valid_new_prompts, data.valid_new_references)
-    before_fig, _, _ = plotting.obtain_experiment_results(new_ind, data, data.dataset_config_code, "before_exp-" + exp_config, prefix="BEFORE", threshold=knowledge_threshold)
+    # data.set_icl_peft_sets(data.train_existing_data, data.train_existing_prompts, data.train_existing_references, data.valid_new_prompts, data.valid_new_references)
+    # before_fig, _, _ = plotting.obtain_experiment_results(new_ind, data, data.dataset_config_code, "before_exp-" + exp_config, prefix="BEFORE", threshold=knowledge_threshold)
 
     # create subset on the new training data
+    print(f"Creating subset for {exp_config}...")
     subset_fig, subset_idx = plotting.visualize_subset(subset_percentage, utility_criteria, data)
     data.create_train_subset(subset_idx)
 
     # AFTER: what does the LM "know"?
     # icl/peft sets contain the entire existing training data + subset from the new training data
     # evaluate on the new validation data
+    print(f"Finetune & inference on {exp_config}...")
     data.set_icl_peft_sets(data.train_new_data_sub, data.train_new_prompts_sub, data.train_new_references_sub, data.valid_new_prompts, data.valid_new_references)
     after_fig, _, _ = plotting.obtain_experiment_results(new_ind, data, data.dataset_config_code, exp_config, prefix="AFTER", threshold=knowledge_threshold)
 
-    return before_fig, subset_fig, after_fig
+    return after_fig, subset_fig, after_fig
 
 
 def correct_value(val):

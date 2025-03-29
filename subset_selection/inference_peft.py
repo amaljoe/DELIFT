@@ -21,7 +21,8 @@ class InferencePEFT:
         Returns:
             None
         """
-        
+        print('Entering training script...')
+
         quant_storage_dtype = torch.bfloat16
 
         bnb_config = BitsAndBytesConfig(
@@ -121,9 +122,9 @@ class InferencePEFT:
             per_device_eval_batch_size=8,
             gradient_accumulation_steps=1,
             eval_accumulation_steps=1,
-            evaluation_strategy="steps", #no
-            eval_steps=500, #10
-            save_strategy="steps", #no
+            evaluation_strategy="no", #no
+            eval_steps=10, #10
+            save_strategy="no", #no
             save_steps=500,
             learning_rate=2.5e-5,
             bf16=True,

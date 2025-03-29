@@ -47,6 +47,7 @@ class Models:
         if torch.cuda.device_count() > 1:
             print(f"Using {torch.cuda.device_count()} GPUs!")
             self.language_model = torch.nn.DataParallel(self.language_model).module
+            self.embedding_model = torch.nn.DataParallel(self.embedding_model).module
         
         ## left padding for generation
         self.language_tokenizer = AutoTokenizer.from_pretrained(language_model_name, padding_side='left')
